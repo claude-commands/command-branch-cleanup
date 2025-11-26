@@ -10,15 +10,15 @@ git clone git@github.com:claude-commands/command-branch-cleanup.git <clone-path>
 
 # Symlink (use full path to cloned repo)
 ln -s <clone-path>/command-branch-cleanup/branch-cleanup.md ~/.claude/commands/branch-cleanup.md
-```
+```text
 
 ## Usage
 
-```
+```text
 /branch-cleanup              # Dry-run: show what would be deleted
 /branch-cleanup --force      # Actually delete branches
 /branch-cleanup --dry-run    # Explicit dry-run mode
-```
+```text
 
 ## What it does
 
@@ -30,7 +30,7 @@ ln -s <clone-path>/command-branch-cleanup/branch-cleanup.md ~/.claude/commands/b
 
 ## Output Format
 
-```
+```text
 ## Branch Cleanup Analysis
 
 ### Safe to Delete (Merged)
@@ -45,7 +45,7 @@ ln -s <clone-path>/command-branch-cleanup/branch-cleanup.md ~/.claude/commands/b
 
 ### Protected (Never Delete)
 - main, dev
-```
+```text
 
 ## Safety Features
 
@@ -59,6 +59,7 @@ ln -s <clone-path>/command-branch-cleanup/branch-cleanup.md ~/.claude/commands/b
 ## Protected Branches
 
 These are never deleted:
+
 - `main`, `master`
 - `dev`, `develop`
 - `release/*`, `production`
@@ -73,4 +74,4 @@ These are never deleted:
 
 ```bash
 cd <clone-path>/command-branch-cleanup && git pull
-```
+```text

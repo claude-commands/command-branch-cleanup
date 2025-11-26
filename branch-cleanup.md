@@ -12,11 +12,13 @@ Analyze branches and show what would be cleaned up (dry-run mode).
 **Usage:** `/branch-cleanup [options]`
 
 **Examples:**
+
 - `/branch-cleanup` - Dry-run: show what would be deleted
 - `/branch-cleanup --force` - Actually delete the branches
 - `/branch-cleanup --dry-run` - Explicit dry-run mode
 
 **Workflow:**
+
 1. Fetch and prune remote-tracking references
 2. Identify merged branches (safe to delete)
 3. Find branches with deleted remotes
@@ -40,42 +42,55 @@ Clean up stale and merged git branches based on the specified mode.
 ## Steps
 
 1. **Sync Remote State**
+
    ```bash
    git fetch --prune origin
-   ```
+   ```text
+
    This removes remote-tracking branches that no longer exist on the remote.
 
 2. **Get Current Branch**
+
    ```bash
    git branch --show-current
    ```
+
    Never delete the current branch or protected branches (main, master, dev, develop).
 
 3. **Identify Merged Branches**
    Find branches already merged into main/master/dev:
+
    ```bash
    git branch --merged main | grep -v "main\|master\|dev\|develop\|\*"
    ```
+
    These are safe to delete - their commits exist in the main branch.
 
 4. **Find Branches with Deleted Remotes**
+
    Local branches whose remote tracking branch was deleted:
+
    ```bash
    git branch -vv | grep ': gone]' | awk '{print $1}'
    ```
+
    These typically indicate completed PRs that were merged and deleted on GitHub.
 
 5. **Detect Stale Branches**
+
    Branches with no commits in 30+ days:
+
    ```bash
    git for-each-ref --sort=committerdate --format='%(refname:short) %(committerdate:relative)' refs/heads/
    ```
+
    Flag branches older than 30 days for review (but don't auto-delete).
 
 6. **Categorize Results**
 
    Display summary:
-   ```
+
+   ```text
    ## Branch Cleanup Analysis
 
    ### Safe to Delete (Merged)
@@ -93,21 +108,23 @@ Clean up stale and merged git branches based on the specified mode.
    ### Protected (Never Delete)
    - main
    - dev
-   ```
+   ```text
 
 7. **Execute Cleanup** (if `--force`)
 
    For safe deletions (merged + gone remotes):
+
    ```bash
    git branch -d <branch-name>  # Safe delete (refuses if not merged)
-   ```
+   ```text
 
    For stale branches, ask user to confirm each one:
    - Show last commit message and date
    - Offer to use `-D` (force) if user confirms
 
 8. **Post-Cleanup Summary**
-   ```
+
+   ```text
    ## Cleanup Complete
 
    Deleted: 5 branches
@@ -115,7 +132,7 @@ Clean up stale and merged git branches based on the specified mode.
    Protected: 3 branches (main, dev, master)
 
    Run `git fetch --prune` periodically to keep clean.
-   ```
+   ```text
 
 ## Safety Rules
 
